@@ -1,0 +1,8 @@
+
+Autorestart 
+----------------
+postgres> stop postgres services (pg_ctl stop)
+root# vi /etc/rc.d/rc.local
+Add entry (su - postgres -c 'pg_ctl -D $PGDATA start')  (single apostpear)
+reboot
+check (automatically postgres should be up & Running)

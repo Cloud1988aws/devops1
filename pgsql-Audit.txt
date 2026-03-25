@@ -1,0 +1,50 @@
+Audit --Postgresql.conf				(13 parmeters total)
+==========================
+log_destination = 'stderr'
+logging_collector= on
+log_directory = 'log'
+log_filename  = 'postgresql_%Y-%m-%d_%H%M%S.log'
+log_rotation_age = 1d
+log_rotation_size = 10MB
+log_min_duration_statement = 0   (in millisec)
+log_autovaccum_min_duration = 10min
+log_connections = on
+log_disconnections = on
+log_line_prefix = '%a %u %d %r %p %t'
+log_statement = 'all'
+log_temp_files = 0 
+
+pg_ctl restart
+pg_ctl status
+
+
+
+
+sed -i \
+-e 's/old1/new1/g' 
+-e 's/old2/new2/g' 
+file.sh
+
+
+
+log_destination 				= 'stderr'
+logging_collector				= on
+log_directory 					= 'log'
+log_filename  					= 'postgresql_%Y-%m-%d_%H%M%S.log'
+log_rotation_age 				= 1d
+log_rotation_size 				= 10MB
+log_min_duration_statement		= 0   (in millisec)
+log_autovaccum_min_duration 	= 10min
+log_connections 				= on
+log_disconnections 				= on
+log_line_prefix 				= '%a %u %d %r %p %t'
+log_statement 					= 'all'
+log_temp_files 					= 0 
+
+
+
+
+egrep -i 'log_destination|logging_collector|log_directory|log_filename|log_rotation_age|log_rotation_size|log_min_duration_statement|log_autovaccum_min_duration| log_connections|log_disconnections|log_line_prefix|log_statement|log_temp_files'
+
+9702447275
+admin universal

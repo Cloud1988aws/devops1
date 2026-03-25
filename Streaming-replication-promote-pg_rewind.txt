@@ -1,0 +1,233 @@
+streaming Replication
+======================
+
+listen_addresses = '*'
+wal_level = replica
+max_wal_senders = 10
+max_replication_slots = 10
+wal_keep_size = 1GB
+archive_mode = on
+archive_command = 'cp %p /archive/%f'
+hot_standby = on
+
+pg_hba.conf
+host 	all		all		10.0.2.12/24		md5
+host 	replication	replicator	10.0.2.12/24		md5	
+
+
+CREATE ROLE replicator WITH REPLICATION LOGIN PASSWORD 'replica123';
+SHOW wal_level;
+SHOW max_wal_senders;
+SHOW hot_standby;
+SELECT * FROM pg_stat_replication;   -- standby should appear
+
+
+
+Standby 
+================
+host 	all		all		10.0.2.11/24		md5
+host 	replication	replicator	10.0.2.11/24		md5	
+
+pg_basebackup -h 10.0.2.11 -U replicator -D $PGDATA -Fp -Xs -P -R
+
+
+
+Standby postgresql.conf
+hot_standby = on
+primary_conninfo = 'host=10.0.2.11 port=5432 user=replicator password=replica123'
+restore_command = 'cp /archive/%f %p'
+
+SELECT pg_is_in_recovery();      -- should return t
+SELECT * FROM pg_stat_wal_receiver;  -- should show streaming
+
+
+
+
+-------------------------------------------
+1.promote stanby y as primary
+2.stop primary  x
+3.wal_log_hints = on in Y
+4. add entries in .pgpass
+5./usr/pgsql-16/bin/pg_rewind   --target-pgdata=/var/lib/pgsql/16/data   --source-server="host=10.0.2.11 user=replicator  dbname=postgres"
+6.touch stanby.signal
+7./usr/pgsql-16/bin/pg_ctl start -D /var/lib/pgsql/16/data
+
+
+
+
+Sequence of steps 
+=====================
+stop Primary
+promote Standby
+start Primary
+stop Primary
+pg_rewind Primary
+stop Standby
+start Primary
+standby.signal Standby
+start Standby
+
+
+Step 1 :- Stop pgsql2
+=======================================
+[postgres@pgsql2 data]$ /usr/pgsql-16/bin/pg_ctl -D /var/lib/pgsql/16/data/ stop
+waiting for server to shut down.... done
+server stopped
+
+Step 2 :- Promote  pgsql1
+=======================================
+[postgres@pgsql1 data]$ /usr/pgsql-16/bin/pg_ctl promote -D /var/lib/pgsql/16/data
+waiting for server to promote.... done
+server promoted
+
+postgres@pgsql1 data]$ ps -ef|grep -i postgres
+root        5268    3858  0 11:50 pts/0    00:00:00 su - postgres
+postgres    5269    5268  0 11:50 pts/0    00:00:00 -bash
+postgres    7086    2288  0 15:27 ?        00:00:00 /usr/pgsql-16/bin/postgres -D /var/lib/pgsql/16/data
+postgres    7087    7086  0 15:27 ?        00:00:00 postgres: logger 
+postgres    7088    7086  0 15:27 ?        00:00:00 postgres: checkpointer 
+postgres    7089    7086  0 15:27 ?        00:00:00 postgres: background writer 
+postgres    7114    7086  0 15:30 ?        00:00:00 postgres: walwriter 
+postgres    7115    7086  0 15:30 ?        00:00:00 postgres: autovacuum launcher 
+postgres    7116    7086  0 15:30 ?        00:00:00 postgres: logical replication launcher 
+postgres    7119    5269  0 15:31 pts/0    00:00:00 ps -ef
+postgres    7120    5269  0 15:31 pts/0    00:00:00 grep --color=auto -i postgres
+
+step3 : Insert few records into pgsql1
+=======================================
+[postgres@pgsql1 data]$ psql
+psql (16.13)
+Type "help" for help.
+
+postgres=# \c sakeel
+You are now connected to database "sakeel" as user "postgres".
+sakeel=# select count(*) from t;
+ count 
+-------
+ 36010
+(1 row)
+
+sakeel=# INSERT INTO t (i)
+SELECT generate_series(1, 1000);
+INSERT 0 1000
+sakeel=# INSERT INTO t (i)
+SELECT generate_series(1, 1000);
+INSERT 0 1000
+sakeel=# INSERT INTO t (i)
+SELECT generate_series(1, 1000);
+INSERT 0 1000
+sakeel=# select count(*) from t;
+ count 
+-------
+ 39010
+(1 row)
+
+step 4: start ,stop and pg_rewind pgsql2 :
+========================================
+[postgres@pgsql2 data]$ /usr/pgsql-16/bin/pg_ctl -D /var/lib/pgsql/16/data/ start
+waiting for server to start....2026-03-10 15:32:33.091 +04 [6831] LOG:  redirecting log output to logging collector process
+2026-03-10 15:32:33.091 +04 [6831] HINT:  Future log output will appear in directory "log".
+ done
+server started
+[postgres@pgsql2 data]$ /usr/pgsql-16/bin/pg_ctl -D /var/lib/pgsql/16/data/ stop
+waiting for server to shut down.... done
+server stopped
+[postgres@pgsql2 data]$ /usr/pgsql-16/bin/pg_rewind --target-pgdata=/var/lib/pgsql/16/data --source-server='user=replicator host=10.0.2.11  dbname=postgres'
+pg_rewind: servers diverged at WAL location 0/E071B38 on timeline 6
+pg_rewind: rewinding from last common checkpoint at 0/E071AC0 on timeline 6
+pg_rewind: Done!
+
+step 5 : Stop pgsql1
+=======================================
+[postgres@pgsql1 data]$ /usr/pgsql-16/bin/pg_ctl -D /var/lib/pgsql/16/data/ stop
+waiting for server to shut down.... done
+server stopped
+
+Step 6 : Start pgsql2
+=======================================
+[postgres@pgsql2 data]$ /usr/pgsql-16/bin/pg_ctl -D /var/lib/pgsql/16/data/ start
+waiting for server to start....2026-03-10 15:33:12.115 +04 [6844] LOG:  redirecting log output to logging collector process
+2026-03-10 15:33:12.115 +04 [6844] HINT:  Future log output will appear in directory "log".
+ done
+server started
+
+[postgres@pgsql2 data]$ ps -ef|grep postgres
+root        5667    3484  0 12:05 pts/0    00:00:00 su - postgres
+postgres    5668    5667  0 12:05 pts/0    00:00:00 -bash
+postgres    6844    2822  0 15:33 ?        00:00:00 /usr/pgsql-16/bin/postgres -D /var/lib/pgsql/16/data
+postgres    6845    6844  0 15:33 ?        00:00:00 postgres: logger 
+postgres    6846    6844  0 15:33 ?        00:00:00 postgres: checkpointer 
+postgres    6847    6844  0 15:33 ?        00:00:00 postgres: background writer 
+postgres    6849    6844  0 15:33 ?        00:00:00 postgres: walwriter 
+postgres    6850    6844  0 15:33 ?        00:00:00 postgres: autovacuum launcher 
+postgres    6851    6844  0 15:33 ?        00:00:00 postgres: logical replication launcher 
+postgres    6852    5668  0 15:33 pts/0    00:00:00 ps -ef
+postgres    6853    5668  0 15:33 pts/0    00:00:00 grep --color=auto postgres
+
+check walwriter  process
+
+
+Step 7 : Touch standby.signal & start on pgsql1 
+===============================================
+[postgres@pgsql1 data]$ touch standby.signal
+[postgres@pgsql1 data]$ /usr/pgsql-16/bin/pg_ctl -D /var/lib/pgsql/16/data/ start
+waiting for server to start....2026-03-10 15:34:01.582 +04 [7141] LOG:  redirecting log output to logging collector process
+2026-03-10 15:34:01.582 +04 [7141] HINT:  Future log output will appear in directory "log".
+ done
+server started
+[postgres@pgsql1 data]$ ps -ef|grep -i postgres
+root        5268    3858  0 11:50 pts/0    00:00:00 su - postgres
+postgres    5269    5268  0 11:50 pts/0    00:00:00 -bash
+postgres    7141    2288  0 15:34 ?        00:00:00 /usr/pgsql-16/bin/postgres -D /var/lib/pgsql/16/data
+postgres    7142    7141  0 15:34 ?        00:00:00 postgres: logger 
+postgres    7143    7141  0 15:34 ?        00:00:00 postgres: checkpointer 
+postgres    7144    7141  0 15:34 ?        00:00:00 postgres: background writer 
+postgres    7145    7141  0 15:34 ?        00:00:00 postgres: startup recovering 00000007000000000000000E
+postgres    7149    7141  0 15:34 ?        00:00:00 postgres: walreceiver streaming 0/E0C7010
+postgres    7151    5269  0 15:34 pts/0    00:00:00 ps -ef
+postgres    7152    5269  0 15:34 pts/0    00:00:00 grep --color=auto -i postgres
+
+Step 8 :  Verification on pgsql1
+=======================
+postgres=# SELECT pg_is_in_recovery(); 
+ pg_is_in_recovery 
+-------------------
+ t
+(1 row)
+
+postgres=# SELECT * FROM pg_stat_wal_receiver; 
+ pid  |  status   | receive_start_lsn | receive_start_tli | written_lsn | flushed_lsn | received_tli |      last_msg_send_time       |     last_msg_receipt_time     | latest_end_lsn |        latest_end_time     
+   | slot_name | sender_host | sender_port |                                                                                                                                                                     co
+nninfo                                                                                                                                                                     
+------+-----------+-------------------+-------------------+-------------+-------------+--------------+-------------------------------+-------------------------------+----------------+----------------------------
+---+-----------+-------------+-------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 7149 | streaming | 0/E000000         |                 7 | 0/E0C7010   | 0/E0C7010   |            7 | 2026-03-10 15:34:31.769681+04 | 2026-03-10 15:34:31.733297+04 | 0/E0C7010      | 2026-03-10 15:34:01.704766+
+04 |           | 10.0.2.12   |        5432 | user=replicator password=******** channel_binding=prefer dbname=replication host=10.0.2.12 port=5432 fallback_application_name=walreceiver sslmode=prefer sslcompressi
+on=0 sslcertmode=allow sslsni=1 ssl_min_protocol_version=TLSv1.2 gssencmode=prefer krbsrvname=postgres gssdelegation=0 target_session_attrs=any load_balance_hosts=disable
+(1 row)
+
+
+Step 9: Insert records into pgsql2
+=====================================
+[postgres@pgsql2 data]$ psql
+psql (16.13)
+Type "help" for help.
+
+postgres=# \c sakeel
+You are now connected to database "sakeel" as user "postgres".
+sakeel=# INSERT INTO t (i)
+SELECT generate_series(1, 1000);
+INSERT 0 1000
+
+Step 10: Select records from pgsql1
+=====================================
+[postgres@pgsql1 data]$ psql
+postgres=# \c sakeel
+You are now connected to database "sakeel" as user "postgres".
+
+sakeel=# select count(*) from t;
+ count 
+-------
+ 40010
+(1 row)
