@@ -99,4 +99,19 @@ sivas@sivasankarm MINGW64 ~/Downloads/devops1 (main)
 $  git config --global --list
 user.email=cloud1988aws@gmail.com
 
+sh0ortcut Notes:-
+-----------
+git config --global --list
+git status
+git add .
+git commit -m "comments"
+git push
+
+
+PAT (personal access token) for Push request without using password to clone from Developer machine (VM) to github main branch
+PR (Pull request) is manager approval to merge from github  custom branch to github  main branch mostly
+
+
+
+
 
