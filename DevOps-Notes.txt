@@ -108,8 +108,12 @@ git commit -m "comments"
 git push
 
 
-PAT (personal access token) for Push request without using password to clone from Developer machine (VM) to github main branch
-PR (Pull request) is manager approval to merge from github  custom branch to github  main branch mostly
+(i)PAT (personal access token) for Push request without using password to clone from Developer machine (VM) to github main branch
+github console--settings--developer settings--personal access tokens--tokens(classic)--create new 
+use the key on vm while doing git push 
+
+(ii)PR (Pull request) is manager approval to merge from github  custom branch to github  main branch mostly
+
 
 
 
