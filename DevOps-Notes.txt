@@ -6,6 +6,11 @@ cloud1988aws@gmail.com
 Cloud1988aws@123
 Username	Cloud1988aws
 
+Class details
+----------------
+19-Mar--EC2 Instance creation on AWS console
+25-Mar--Apache vm creation,Push,pull
+27-Mar--PAT,Pull Request/Merge,Branch Creation,Tags & Releases,Application security
 
 
 Install Git in Windows 11 using powershell
@@ -99,7 +104,7 @@ sivas@sivasankarm MINGW64 ~/Downloads/devops1 (main)
 $  git config --global --list
 user.email=cloud1988aws@gmail.com
 
-sh0ortcut Notes:-
+shortcut Notes:-
 -----------
 git config --global --list
 git status
@@ -116,6 +121,9 @@ use the key on vm while doing git push
 
 
 
+
+
+5388de9	5a75871bb1b315cc4b5f6700ed5a6a8aa
 
 
 
