@@ -1,0 +1,69 @@
+Step 1: Install Apache on Ubuntu
+sudo apt update
+sudo apt install apache2 -y
+sudo systemctl start apache2
+sudo systemctl enable apache2
+sudo systemctl status apache2
+
+Step 2: Allow Firewall
+sudo ufw allow 'Apache'
+sudo ufw enable
+
+Step 3: Test Apache Installation
+http://16.171.206.245
+
+Step 4: Create Your Website Directory
+sudo mkdir -p /var/www/mywebsite
+sudo chown -R $USER:$USER /var/www/mywebsite
+sudo chmod -R 755 /var/www/mywebsite
+
+Step 5: Create Your Website (HTML)
+vi /var/www/mywebsite/index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My First Website</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
+            margin-top: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to My Website</h1>
+    <p>Hosted on Apache Ubuntu Server</p>
+</body>
+</html>
+
+
+Step 6: Create Apache Virtual Host
+
+vi /etc/apache2/sites-available/mywebsite.conf
+
+<VirtualHost *:80>
+    ServerAdmin admin@mywebsite.com
+    ServerName mywebsite.com
+    ServerAlias www.mywebsite.com
+    DocumentRoot /var/www/mywebsite
+
+    <Directory /var/www/mywebsite>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+Step 7: Enable Website
+sudo a2ensite mywebsite.conf
+sudo a2dissite 000-default.conf
+sudo systemctl reload apache2
+
+Step 8: Test Your Website
+http://your-server-ip
