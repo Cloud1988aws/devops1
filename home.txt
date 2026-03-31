@@ -1,0 +1,123 @@
+Advance 	50000	Excavation	33000											
+					Labour		27000
+					Centring	45000
+					Marking		10000
+					cenoit		30000
+					box 		5000
+
+
+sri vigneshwara tractors	
+					sand-5	11000
+					20m-5	17500
+					40m-1	3200
+									31700
+
+1	sand 	3000
+1	40m		3200
+3	sand	6600
+3	20mm	10500									
+
+
+
+
+						Spent		Balance		Total
+				UPI		71,300		0			71,300
+				Cash	7,06,100	2,93,900	10,00,000
+29th Mar		Total	7,77,400	2,93,900	10,71,300
+									2,70,000
+									
+Summary 
+================================
+28th Feb		MestriAdvance	 		Cash						1,00,000
+28th Feb		Borewell											9000
+5th  Mar 		Cement Bags	100			UPI payment 				34,600	
+28th   Feb		steel+cement			Cash						1,40,000
+5th  Mar 		Mestri Footing 			Cash						1,00,000	
+8th  Mar		Sand+gravel+box			UPI payment					36,700
+11th Mar		Beam(steel+cement)		Cash						1,02,000	
+11th Mar		Cc Camera				Cash						09,300
+15th Mar		Mestri plinth beam		Cash						1,00,000		
+16th Mar		Oil													1500	
+18th Mar		cement+gravel+sand+oil	Cash						43,000
+23rd Mar		sand fill+Tank 			Cash						40,000			
+26th 			pesticide											1400
+29th Mar		bedding+Tank+labour		Cash						73,100
+	
+Material
+=============
+28th Feb	Footing	140000rs/-  640 ignored
+
+Material	unit		weight/piece	price/piece		Amount
+16mm 		32			18.96kg			1505			48160
+12mm		20			10.66kg			846				16920	
+10mm		50			7.4kg			600				30000
+8mm 		100			4.74kg			393				39300	
+binding		25kg		5kg				500				2500
+cement		10bags						346				3460
+cblocks		3box						100				300
+
+Borewell 												9000
+
+5th Mar  (beam underlayer path)  UPI
+cement		100							346				34,600
+
+8th mar 		36700rs/-   UPI
+sand		5											11000
+gravel(20m)	5											17500	
+gravel(40m)	1											3200
+boxes(shuttering)										5000		
+
+11th Mar	(plinth Beam)	1,02,000rs/-  CASH
+----------
+16mm		40							1529			61160	
+12mm		40							850				34360
+binding		30kg						500				3000
+cement		10bags						346				3460
+
+16th Mar
+---------
+oil														1500
+ 				
+18th Mar 55/70 bags Beam 		CASH					43,000
+3 gravel 												10,500
+3 sands													6600
+cement 70 bags 											24200
+---bal 25 bags/steel pending
+
+23rd Mar
+---------
+Tank Excavation
+Sand filling between beams			1					2200
+labour			ms(1200)-1 m(900)-1 f(800)-2 			3700
+
+24th Mar
+---------	
+gravel big 	2	3200									6400
+Bricks		1	19000									19000
+labour			ms(1200)-1 m(900)-1 f(800)-2 			3700
+
+25th Mar
+---------
+labour			ms(1200)-2 m(900)-1 f(800)-2 			4900
+
+26th Mar	
+---------
+pesticide 												1400
+sand		3	1200									6600
+labour			ms(1200)-2 m(900)-3 f(800)-2 			5500
+
+27th Mar
+---------
+labour			ms(1200)-2 m(900)-3 f(800)-2 			5500
+
+28th Mar
+---------
+plastic steps tank										500
+sand filter												650
+sand 	1												1200
+labour			ms(1200)-1 m(900)-0 f(800)-2 			2800
+Mestri													5000
+cement ultra	10										3200
+----------------------------------------------------------------------------
+29th Mar paid to Mestri from 									73,100
+----------------------------------------------------------------------------
