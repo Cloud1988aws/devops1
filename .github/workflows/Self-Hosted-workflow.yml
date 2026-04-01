@@ -26,5 +26,4 @@ jobs:
          pkill -f app.py || true
          python3 -m venv mvenv
          source mvenv/bin/activate 
-         pip install flask 
-         nohup python app.py > flask.log 2>&1 &
+         nohup python3 app.py > flask.log 2>&1 &
