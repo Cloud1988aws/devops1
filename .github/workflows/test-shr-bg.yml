@@ -1,0 +1,52 @@
+name: Self-Hosted Flask Workflow
+
+on:
+  push:
+    branches: ["main", "raju1"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  app_build:
+    runs-on: self-hosted
+    steps:
+      # Step 1: Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      # Step 2: Set up Python (if not installed globally)
+      - name: Check Python Version
+        run: python3 --version
+
+      # Step 3: Install dependencies and run Flask in background
+      - name: Run Flask in Background
+        run: |
+          # Kill any previous instance
+          pkill -f app.py || true
+
+          # Go to repo directory
+          cd $GITHUB_WORKSPACE
+
+          # Create virtual environment if it doesn't exist
+          if [ ! -d "myenv" ]; then
+            python3 -m venv myenv
+          fi
+
+          # Activate virtual environment
+          source myenv/bin/activate
+
+          # Install requirements
+          pip install -r requirements.txt
+
+          # Run Flask app in background, logs go to flask.log
+          nohup python3 app.py > flask.log 2>&1 &
+
+      # Step 4: Verify Flask started
+      - name: Verify Flask
+        run: |
+          sleep 3
+          echo "Checking if Flask is running..."
+          ps -ef | grep app.py | grep -v grep || echo "Flask not running yet"
+          ss -tulnp | grep 8000 || echo "Port 8000 not open yet"
+          tail -n 10 flask.log
