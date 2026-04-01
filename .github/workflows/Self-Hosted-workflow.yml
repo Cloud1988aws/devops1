@@ -24,6 +24,8 @@ jobs:
       - name: Run Flask App
         run: |
          pkill -f app.py || true
-         python3 -m venv myenv
+             if [ ! -d "myenv" ]; then
+            python3 -m venv myenv
+          fi
          source myenv/bin/activate 
-         screen -dmS flaskapp bash -c "source myenv/bin/activate && python3 app.py"
+         nohup python3 app.py > flask.log 2>&1 &
