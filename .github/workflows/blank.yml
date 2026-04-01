@@ -13,21 +13,49 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  check-languages:
     runs-on: ubuntu-latest
-# Steps represent a sequence of tasks that will be executed as part of the job
+
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v6
+      - name: Check installed languages
+        run: |
+          echo "Node:"
+          node -v || echo "Node not found"
+
+          echo "Python:"
+          python3 --version || echo "Python not found"
+
+          echo "Java:"
+          java -version || echo "Java not found"
+
+          echo "Go:"
+          go version || echo "Go not found"
+
+          echo "Ruby:"
+          ruby -v || echo "Ruby not found"
+
+          echo "PHP:"
+          php -v || echo "PHP not found"
+
+          echo "Dotnet:"
+          dotnet --version || echo "Dotnet not found"
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+#jobs:
+  # This workflow contains a single job called "build"
+ # build:
+    # The type of runner that the job will run on
+  #  runs-on: ubuntu-latest
+# Steps represent a sequence of tasks that will be executed as part of the job
+  #  steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+   #   - uses: actions/checkout@v6
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+ #     - name: Run a one-line script
         #run: echo Hello, world!
-        run: Java --version
+#        run: Java --version
       # Runs a set of commands using the runners shell
       #- name: Run a multi-line script
        # run: |
