@@ -26,5 +26,5 @@ jobs:
          python3 -m venv mvenv
          source mvenv/bin/activate 
          pip install flask 
-         python app.py
+         nohup python app.py > flask.log 2>&1 &
 
