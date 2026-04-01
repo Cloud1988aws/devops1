@@ -26,4 +26,4 @@ jobs:
          pkill -f app.py || true
          python3 -m venv mvenv
          source mvenv/bin/activate 
-         nohup python3 app.py > flask.log 2>&1 &
+         screen -dmS flaskapp bash -c "source mvenv/bin/activate && python3 app.py"
