@@ -23,8 +23,8 @@ jobs:
         run:  python3 --version 
       - name: Run Flask App
         run: |
+         pkill -f app.py || true
          python3 -m venv mvenv
          source mvenv/bin/activate 
          pip install flask 
          nohup python app.py > flask.log 2>&1 &
-
