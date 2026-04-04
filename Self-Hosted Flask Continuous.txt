@@ -1,0 +1,33 @@
+name: Self-Hosted Flask Continuous
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main", "raju1"]
+
+jobs:
+  app_build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Kill old Flask
+        run: pkill -f app.py || true
+
+      - name: Set up Python and install Flask
+        run: |
+          cd $GITHUB_WORKSPACE
+          python3 -m venv myenv
+          myenv/bin/pip install --upgrade pip
+          myenv/bin/pip install flask
+
+      - name: Run Flask in Background
+        run: |
+          cd $GITHUB_WORKSPACE
+          nohup myenv/bin/python app.py > flask.log 2>&1 &
+
+      - name: Keep Workflow Running
+        run: |
+          echo "Workflow will run continuously. Cancel manually to stop."
+          tail -f flask.log
