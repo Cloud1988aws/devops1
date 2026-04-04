@@ -1,0 +1,54 @@
+**pull branch siva into local desktop using git Bash
+ git clone -b siva  https://github.com/Cloud1988aws/devops1.git
+
+**Copy file from desktop to newly cloned path using Git Bash
+$ cp -pr /c/Users/sivas/Downloads/devops1/Self-Hosted\ Flask\ Continuous.txt /c/Users/sivas/Downloads/devops1/new/devops1/
+
+
+sivas@sivasankarm MINGW64 ~/Downloads/devops1/new/devops1 (siva)
+$ git status
+On branch siva
+Your branch is up to date with 'origin/siva'.
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        Self-Hosted Flask Continuous.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+sivas@sivasankarm MINGW64 ~/Downloads/devops1/new/devops1 (siva)
+$ git add .
+
+sivas@sivasankarm MINGW64 ~/Downloads/devops1/new/devops1 (siva)
+$ git status
+On branch siva
+Your branch is up to date with 'origin/siva'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        new file:   Self-Hosted Flask Continuous.txt
+
+
+sivas@sivasankarm MINGW64 ~/Downloads/devops1/new/devops1 (siva)
+$ git commit -m "Self-Hosted  file appended"
+[siva 916df96] Self-Hosted  file appended
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Self-Hosted Flask Continuous.txt
+
+**Sync from Desktop to GitHub branch Siva
+sivas@sivasankarm MINGW64 ~/Downloads/devops1/new/devops1 (siva)
+$ git push -u origin siva
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 24 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 684 bytes | 684.00 KiB/s, done.
+Total 3 (delta 1), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local object.
+To https://github.com/Cloud1988aws/devops1.git
+   3510726..916df96  siva -> siva
+branch 'siva' set up to track 'origin/siva'.
+
+sivas@sivasankarm MINGW64 ~/Downloads/devops1/new/devops1 (siva)
+$
+
