@@ -103,7 +103,7 @@ jobs:
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
-          target: "https://www.5movierulz.navy"
+          target: "https://www.airarabia.com"
           fail_action: false
           issue_title: "ZAP DAST Scan Report"        # ← creates GitHub issue with results
           artifact_name: zap-results
@@ -114,27 +114,3 @@ jobs:
         with:
           name: zap-html-report
           path: report_html.html
-
-
-  app_build:
-    runs-on: self-hosted
-    needs: dast
-    if: always()
-    environment:
-      name: production
-    
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v6
-
-      - name: Check Python Version
-        run:  python3 --version 
-
-      - name: Run Flask App
-        run: |
-          python3 -m venv venv
-          source venv/bin/activate 
-          pip install flask 
-          python app.py &
