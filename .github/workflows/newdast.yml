@@ -103,13 +103,13 @@ jobs:
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
-          target: "https://www.airarabia.com"
+          target: "https://www.cbiuae.com"
           fail_action: false
           issue_title: "ZAP DAST Scan Report"        # ← creates GitHub issue with results
           artifact_name: zap-results
 
       - name: Upload ZAP Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: zap-html-report
