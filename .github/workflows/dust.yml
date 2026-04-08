@@ -107,9 +107,9 @@ jobs:
           artifact_name: zap-results
 
       - name: Upload ZAP Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: zap-html-report
-          path: report_html.html
+          name: zap1-html-report
+          path: report1_html.html
 
