@@ -61,7 +61,7 @@ jobs:
           name: sast-report
           path: /home/runner/work/_temp/codeql_databases/
           retention-days: 7  # Keep for 1 week instead of 90 days
-dast:
+  dast:
     name: DAST Analysis (OWASP ZAP)
     needs: sast
     runs-on: ubuntu-latest
